@@ -1,0 +1,30 @@
+from flask import Flask, request, jsonify, render_template
+import pickle
+import numpy as np
+model_path='classifier.pkl'
+with open(model_path,'rb') as file:
+    new_model=pickle.load(file)
+
+app=Flask(__name__)
+
+@app.route('/')
+def home():
+    return render_template('index.html')
+
+@app.route('/predict', methods=['POST'])
+def predict():
+
+    #Extract data from form
+    int_features=[int(x) for x in request.form.values()]
+    final_features=[np.array(int_features)]
+
+    #Make Prediction
+    prediction=new_model.predict(final_features)
+    output= 'Good' if prediction[0]==1 else 'Bad'
+
+    return render_template('index.html', prediction_text='Prediction: {}'.format(output))
+
+if __name__=="__main__":
+    app.run(debug=True)
+
+
