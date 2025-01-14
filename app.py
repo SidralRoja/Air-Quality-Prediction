@@ -15,16 +15,14 @@ def home():
 def predict():
 
     #Extract data from form
-    int_features=[int(x) for x in request.form.values()]
-    final_features=[np.array(int_features)]
+    float_features=[float(x) for x in request.form.values()]
+    final_features=[np.array(float_features)]
 
     #Make Prediction
     prediction=new_model.predict(final_features)
-    output= 'Good' if prediction[0]==1 else 'Bad'
+    output= 'Good' if prediction[0]=='1' else 'Poor'
 
     return render_template('index.html', prediction_text='Prediction: {}'.format(output))
 
 if __name__=="__main__":
     app.run(debug=True)
-
-
